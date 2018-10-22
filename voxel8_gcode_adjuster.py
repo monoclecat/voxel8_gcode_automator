@@ -3,6 +3,7 @@ from print_in_color import *
 
 g1_command = re.compile('G1 X(?P<x_home>\d+\.\d+) Y(?P<y_home>\d+\.\d+)')
 
+
 def print_help():
     print_blue("Display this help text: python voxel8_gcode_adjuster.py help")
     print_blue("Usage: python voxel8_gcode_adjuster.py file_to_modify.gcode")
@@ -35,18 +36,6 @@ buffer = [';converted using the Voxel8 gcode adjuster tool\n',  # Line 0
           'G1 F500\n',
           '; End of the preamble inserted by the Voxel8 gcode adjuster tool\n\n\n']
 
-# output.write(';converted using the Voxel8 gcode adjuster tool\n'  # Line 0
-#              'G90\n'  # Line 1
-#              '; This line shall be replaced with the G92 command'  # Line 2
-#              'G21\n'
-#              'M125 S{}		;fill pressure tank\n'
-#              'M236 S{}      ;set extrusion pressure\n'
-#              'T1			;choose silver cartridge\n'
-#              'M42 P2 S255		;open valve T1\n'
-#              'G4 P700\n'
-#              'G1 F500\n'
-#              '; End of the preamble inserted by the Voxel8 gcode adjuster tool\n\n\n'.format(str(int(pressure)+20), pressure)
-#              )
 
 copy_line = False
 
