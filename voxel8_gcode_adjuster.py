@@ -1,20 +1,25 @@
 import sys, re, os
 
+
+def enter_prompt():
+    input("Press Enter / Drücke Enter")
+
+
 g1_command = re.compile('G1 X(?P<x_home>\d+\.\d+) Y(?P<y_home>\d+\.\d+)')
 
 if len(sys.argv) <= 1:
-    file_name_argument = input("Bitte ziehe die zu konvertierende Datei hier hinein -> ")
+    file_name_argument = input("Drag&drop file to be converted / Zu konvertierende Datei hier rein ziehen -> ")
 else:
     file_name_argument = sys.argv[1]
 
 path, file_name = os.path.split(file_name_argument)
 if file_name.find('.gcode') == -1:
-    print("Datei muss eine .gcode Dateiendung haben!")
-    input("Drücke Enter, um zu schliessen.")
+    print("File must have a .gcode ending! / Datei muss eine .gcode Dateiendung haben!")
+    enter_prompt()
     exit()
 
 
-pressure = input("Was soll der Extraktionsdruck sein? -> ")
+pressure = input("Extrusion pressure / Extraktionsdruck -> ")
 buffer = ['; Converted using the Voxel8 gcode adjuster tool\n',  # Line 0
           'G90\n',  # Line 1
           '; This line shall be replaced with the G92 command\n',  # Line 2
@@ -48,7 +53,6 @@ shut_off_heaters_comment = '; shut off heaters'
 for i, line in enumerate(file):
     if not beginning_of_source_file_trimmed:
         if line.find(extrusion_preamble_comment) == 0:
-            print("Originaldatei wird ab der {}. Zeile übernommen".format(i+1))
             copy_line = True
             beginning_of_source_file_trimmed = True
             find_home = True
@@ -61,7 +65,7 @@ for i, line in enumerate(file):
 
     if not inside_mid_layer_wipe:
         if line.find(mid_layer_wipe_comment) == 0:
-            print("Ein mid-layer wipe wurde in Zeile {} entfernt".format(i+1))
+            print("A mid-layer wipe was removed in line {} / Ein mid-layer wipe wurde in Zeile {} entfernt".format(i+1, i+1))
             copy_line = False
             inside_mid_layer_wipe = True
             buffer.append('\n\n\n; A mid-layer wipe was removed here \n\n\n')
@@ -72,7 +76,6 @@ for i, line in enumerate(file):
 
     if not end_of_source_file_trimmed:
         if line.find(shut_off_heaters_comment) == 0:
-            print("Originaldatei wurde bis zur {}. Zeile übernommen".format(i+1))
             copy_line = False
             break
 
@@ -89,5 +92,5 @@ buffer += ['\n\n\n; Start of postamble inserted by the Voxel8 gcode adjuster too
 
 output.writelines(buffer)
 
-print('Fertig! ^__^')
-input("Drücke Enter, um zu schliessen.")
+print('Finished! / Fertig! ^__^')
+enter_prompt()
